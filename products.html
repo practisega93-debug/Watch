@@ -1,0 +1,65 @@
+<!doctype html>
+.container{max-width:1100px;margin:24px auto;padding:0 18px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px}
+.card{background:var(--card);border-radius:10px;padding:12px;box-shadow:0 6px 18px rgba(14,18,30,0.06)}
+.btn{display:inline-block;padding:8px 12px;border-radius:8px;background:var(--accent);color:#fff;text-decoration:none}
+</style>
+</head>
+<body>
+<header>
+<div class="container" style="display:flex;align-items:center;gap:12px">
+<div class="brand">TickTock Watches</div>
+<nav style="margin-left:12px;display:flex;gap:10px;align-items:center">
+<a href="index.html">Home</a>
+<a href="products.html">Products</a>
+<a href="checkout.html">Payments</a>
+</nav>
+<div style="margin-left:auto">
+<a href="checkout.html" class="btn">Cart</a>
+</div>
+</div>
+</header>
+
+
+<main class="container">
+<h2>Products</h2>
+<div style="display:flex;gap:12px;align-items:center;margin-bottom:12px">
+<label>Filter:</label>
+<select id="category" onchange="renderProducts()">
+<option value="all">All</option>
+<option value="men">Men</option>
+<option value="women">Women</option>
+</select>
+</div>
+
+
+<div id="grid" class="grid"></div>
+</main>
+
+
+<footer>
+<div class="container">© <span id="year"></span> TickTock Watches</div>
+</footer>
+
+
+<script>
+const PRODUCTS = [
+{id:1,title:'Classic Leather — Men',price:3499,cat:'men',img:'https://via.placeholder.com/400x300.png?text=Classic+Men+Leather'},
+{id:2,title:'Sport Chrono — Men',price:4999,cat:'men',img:'https://via.placeholder.com/400x300.png?text=Sport+Chrono'},
+{id:3,title:'Slim Gold — Women',price:4299,cat:'women',img:'https://via.placeholder.com/400x300.png?text=Slim+Gold+Women'},
+{id:4,title:'Bracelet Elegance — Women',price:3799,cat:'women',img:'https://via.placeholder.com/400x300.png?text=Bracelet+Elegance'},
+{id:5,title:'Smart Fit — Unisex',price:5999,cat:'all',img:'https://via.placeholder.com/400x300.png?text=Smart+Fit'}
+];
+
+
+function addToCart(id){const prod = PRODUCTS.find(p=>p.id===id); const cart=JSON.parse(localStorage.getItem('cart')||'[]'); const ex=cart.find(x=>x.id===id); if(ex) ex.qty++; else cart.push({id:prod.id,title:prod.title,price:prod.price,qty:1,img:prod.img}); localStorage.setItem('cart',JSON.stringify(cart)); alert('Added to cart');}
+
+
+function renderProducts(){const grid=document.getElementById('grid'); const cat=document.getElementById('category').value; grid.innerHTML=''; const filtered=PRODUCTS.filter(p=>cat==='all'?true:(p.cat===cat||p.cat==='all'));
+filtered.forEach(p=>{const d=document.createElement('div'); d.className='card'; d.innerHTML=`<img src="${p.img}" alt="${p.title}" style="width:100%;height:180px;object-fit:cover;border-radius:8px"><h3 style="margin:8px 0">${p.title}</h3><div style="font-weight:700">₹ ${p.price}</div><div style="margin-top:8px"><button onclick="addToCart(${p.id})" class="btn">Add to cart</button> <a style="margin-left:8px" class="btn" href="checkout.html">Buy Now</a></div>`; grid.appendChild(d);});}
+
+
+renderProducts(); document.getElementById('year').textContent = new Date().getFullYear();
+</script>
+</body>
+</html>
